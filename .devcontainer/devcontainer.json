@@ -32,8 +32,6 @@
 		"ms-vscode.cpptools-themes",
 		"cschlosser.doxdocgen",
 		"eamodio.gitlens",
-		"ms-python.python",
-		"ms-python.vscode-pylance",
 		"mutantdino.resourcemonitor"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -46,7 +44,6 @@
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"features": {
 		"git": "latest",
-		"git-lfs": "latest",
-		"powershell": "latest"
+		"git-lfs": "latest"
 	}
 }
