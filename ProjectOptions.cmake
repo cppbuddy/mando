@@ -85,7 +85,7 @@ macro(mando_setup_options)
     set(DEFAULT_FUZZER OFF)
   endif()
 
-  option(mando_BUILD_FUZZ_TESTS "Enable fuzz testing executable" ${DEFAULT_FUZZER})
+  option(MANDO_BUILD_FUZZ_TESTS "Enable fuzz testing executable" ${DEFAULT_FUZZER})
 
 endmacro()
 
