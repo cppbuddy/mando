@@ -5,13 +5,17 @@ FROM ubuntu:${VARIANT}
 # Restate the variant to use it later on in the llvm and cmake installations
 ARG VARIANT
 
+ARG USERNAME=dev
+RUN useradd -ms /bin/zsh ${USERNAME}
+RUN echo "dev:dev" | chpasswd && adduser ${USERNAME} sudo
+
 # Install necessary packages available from standard repos
 RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
         software-properties-common wget apt-utils file zip \
         openssh-client gpg-agent socat rsync \
         make ninja-build git \
-        python3 python3-pip zsh
+        python3 python3-pip zsh sudo stow curl tmux
 
 # Install cpplint
 RUN python3 -m pip install --upgrade pip setuptools && \
@@ -65,7 +69,7 @@ RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/nul
 # Install editors
 RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y --no-install-recommends \
-        nano
+        neovim
 
 # Install optional dependecies
 RUN apt-get update -qq && export DEBIAN_FRONTEND=noninteractive && \
@@ -107,8 +111,23 @@ ENV CXX=${USE_CLANG:+"clang++"}
 ENV CC=${CC:-"gcc"}
 ENV CXX=${CXX:-"g++"}
 
-# Include project
-#ADD . /workspaces/cpp_starter_project
-#WORKDIR /workspaces/cpp_starter_project
+# Set locale
+ENV LANG C.UTF-8
+ENV TERM xterm-256color
+
+USER ${USERNAME}
+WORKDIR /home/${USERNAME}
+
+# Configure Zsh & Tmux 
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc 
+RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# Install Zoxide
+RUN curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 CMD ["/bin/zsh"]
