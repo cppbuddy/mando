@@ -32,7 +32,8 @@
 		"ms-vscode.cpptools-themes",
 		"cschlosser.doxdocgen",
 		"eamodio.gitlens",
-		"mutantdino.resourcemonitor"
+		"mutantdino.resourcemonitor",
+		"xaver.clang-format"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
